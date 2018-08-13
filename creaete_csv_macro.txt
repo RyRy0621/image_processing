@@ -1,0 +1,82 @@
+' ボタンクリックイベント
+    Sub Create_csv()
+
+    Dim lineStr As String   ' 1行読み込み用のバッファ
+    Dim arrayStr As Variant ' 1行データを格納する配列
+    Dim rowIndex, endIndex As Integer ' 出力する開始行のオフセット
+    Dim strPath As String
+    Dim seru As Range
+
+    Dim sname As String
+    Dim rng As String
+    Dim fpath As String
+    Dim fname As String
+
+    endIndex = 0
+
+
+    strPath = "C:\Users\17510\Desktop\csv\bicycle_horizon_red.csv"
+
+    ' csv ファイルをオープン
+    Open strPath For Input As #1
+
+    ' シートには出力開始行から出力
+    rowIndex = 0
+
+    ' ファイルの最後まで読み込む
+    Do While Not EOF(1)
+
+    ' CSV ファイルを1行読み込み
+    Line Input #1, lineStr
+    ' カンマ区切りで分割し配列に格納
+    arrayStr = Split(lineStr, ",")
+    ' A1 セルを基点にして、列数を配列の要素数分広げ、行数のオフセット分ずらして展開する
+    Range("B3").Resize(1, UBound(arrayStr) + 1).Offset(rowIndex) = arrayStr
+    ' 行オフセットをインクリメント
+    rowIndex = rowIndex + 1
+    Loop
+    Debug.Print rowIndex
+    ' csv ファイルを閉じる
+    Close #1
+
+
+    strPath = "C:\Users\17510\Desktop\csv\bicycle_horizon_blue.csv"
+
+    ' csv ファイルをオープン
+    Open strPath For Input As #1
+
+    ' シートには出力開始行から出力
+    rowIndex = 0
+
+    ' ファイルの最後まで読み込む
+    Do While Not EOF(1)
+
+    ' CSV ファイルを1行読み込み
+    Line Input #1, lineStr
+    ' カンマ区切りで分割し配列に格納
+    arrayStr = Split(lineStr, ",")
+    ' A1 セルを基点にして、列数を配列の要素数分広げ、行数のオフセット分ずらして展開する
+    Range("H3").Resize(1, UBound(arrayStr) + 1).Offset(rowIndex) = arrayStr
+    ' 行オフセットをインクリメント
+    rowIndex = rowIndex + 1
+    Loop
+    endIndex = rowIndex + 2
+    Debug.Print endIndex
+    ' csv ファイルを閉じる
+    Close #1
+
+    ' csv作成
+    'ファイル名の指定
+    fname = "testApp4"
+    ' パスの指定
+    fpath = "C:\Users\17510\Desktop\csv\" & fname
+
+
+    ' 選択範囲のセルアドレス
+    ActiveSheet.Range("AE6:AI" & endIndex).Copy
+    Workbooks.Add
+    Range("A1").PasteSpecial xlPasteValues
+    ActiveWorkbook.SaveAs Filename:=fpath, FileFormat:=xlCSV
+    ActiveWorkbook.Close False
+
+End Sub
